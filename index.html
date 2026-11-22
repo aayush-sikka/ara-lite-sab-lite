@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sunny Industries</title>
+<style>
+  :root {
+    --red: #b3121b;
+    --red-dark: #8c0d15;
+    --white: #ffffff;
+    --ink: #1f1a19;
+    --muted: #6a615f;
+    --line: #e7e0de;
+    --tint: #f7f3f2;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--white); color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+
+  /* top bar */
+  .topbar { background: var(--red); color: var(--white); font-size: .86rem; }
+  .topbar .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .topbar a { text-decoration: none; font-weight: 600; }
+
+  /* header */
+  header.site { background: var(--white); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+  header.site .wrap { display: flex; align-items: center; gap: 20px; padding-top: 14px; padding-bottom: 14px; }
+  .logo { font-size: 1.5rem; font-weight: 800; color: var(--red); text-decoration: none; letter-spacing: -.3px; white-space: nowrap; }
+  .search { flex: 1; max-width: 520px; margin-left: auto; }
+  .search input { width: 100%; padding: 10px 14px; font-size: .98rem; border: 1px solid var(--line); border-radius: 6px; background: var(--tint); color: var(--ink); }
+  .search input:focus { background: var(--white); border-color: var(--red); outline: none; }
+  .head-btn { background: var(--red); color: var(--white); padding: 10px 20px; border-radius: 6px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  .head-btn:hover { background: var(--red-dark); }
+
+  /* hero */
+  .hero { background: var(--tint); border-bottom: 1px solid var(--line); }
+  .hero .wrap { padding-top: 56px; padding-bottom: 56px; border-left: 6px solid var(--red); padding-left: 32px; }
+  .hero h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.12; margin: 0 0 12px; max-width: 640px; font-weight: 800; }
+  .hero p { margin: 0 0 26px; max-width: 520px; color: var(--muted); font-size: 1.08rem; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .solid, .outline { display: inline-block; padding: 12px 26px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 1rem; border: 2px solid var(--red); }
+  .solid { background: var(--red); color: var(--white); }
+  .solid:hover { background: var(--red-dark); border-color: var(--red-dark); }
+  .outline { background: var(--white); color: var(--red); }
+  .outline:hover { background: var(--red); color: var(--white); }
+
+  /* info row */
+  .facts { border-bottom: 1px solid var(--line); }
+  .facts .wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .fact { padding: 18px 16px; border-right: 1px solid var(--line); }
+  .fact:first-child { border-left: 1px solid var(--line); }
+  .fact b { display: block; color: var(--red); }
+  .fact span { color: var(--muted); font-size: .92rem; }
+
+  /* products */
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 40px 0 14px; }
+  .section-head h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  .count { color: var(--muted); font-size: .94rem; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+  .chip { flex: none; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font-weight: 600; cursor: pointer; font-size: .94rem; }
+  .chip:hover { border-color: var(--red); color: var(--red); }
+  .chip.on { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  #grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin: 20px 0 56px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; position: relative; background: var(--white); }
+  .card:hover { border-color: var(--red); }
+  .card img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; display: block; background: #fff; padding: 8px; border-bottom: 1px solid var(--line); }
+  .badge { position: absolute; top: 10px; left: 10px; background: var(--red); color: var(--white); font-weight: 700; font-size: .76rem; padding: 3px 10px; border-radius: 4px; }
+  .info { padding: 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .cat { color: var(--muted); font-size: .82rem; }
+  .info h3 { margin: 0; font-size: 1.06rem; line-height: 1.3; }
+  .desc { color: var(--muted); font-size: .92rem; flex: 1; }
+  .price { color: var(--red); font-size: 1.25rem; font-weight: 800; margin-top: 6px; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .btn { text-align: center; padding: 10px 6px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: .92rem; border: 2px solid var(--red); }
+  .btn.call { background: var(--red); color: var(--white); }
+  .btn.call:hover { background: var(--red-dark); border-color: var(--red-dark); }
+  .btn.wa { background: var(--white); color: var(--red); }
+  .btn.wa:hover { background: var(--red); color: var(--white); }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .msg { grid-column: 1 / -1; text-align: center; padding: 50px 0; color: var(--muted); }
+
+  /* enquiry band */
+  .enquiry { background: var(--red); color: var(--white); border-radius: 8px; padding: 28px; display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 56px; }
+  .enquiry h3 { margin: 0 0 4px; font-size: 1.4rem; }
+  .enquiry p { margin: 0; opacity: .92; }
+  .enquiry .btn-row a { border-color: var(--white); }
+  .enquiry .solid { background: var(--white); color: var(--red); }
+  .enquiry .outline { background: transparent; color: var(--white); }
+  .enquiry .outline:hover { background: var(--white); color: var(--red); }
+
+  /* footer */
+  footer { background: var(--ink); color: #e9e2e0; }
+  footer .wrap { padding-top: 32px; padding-bottom: 80px; display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+  footer h4 { margin: 0 0 8px; color: var(--white); }
+  footer p { margin: 2px 0; color: #cfc6c3; }
+
+  /* floating */
+  .float { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 8px; z-index: 30; }
+  .float a { padding: 11px 18px; border-radius: 6px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,.22); border: 2px solid var(--red); }
+  .float .f-call { background: var(--red); color: var(--white); }
+  .float .f-wa { background: var(--white); color: var(--red); }
+
+  /* side menu */
+  .menu-btn { background: none; border: 1px solid var(--line); border-radius: 6px; width: 42px; height: 42px; display: grid; place-content: center; gap: 4px; cursor: pointer; flex: none; }
+  .menu-btn span { display: block; width: 20px; height: 2px; background: var(--red); }
+  .menu-btn:hover { border-color: var(--red); }
+  .overlay { position: fixed; inset: 0; background: rgba(20,10,10,.55); opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s; z-index: 40; }
+  .overlay.open { opacity: 1; visibility: visible; }
+  .drawer { position: fixed; top: 0; left: 0; bottom: 0; width: min(320px, 86vw); background: var(--white); z-index: 50; transform: translateX(-100%); transition: transform .28s ease; display: flex; flex-direction: column; box-shadow: 4px 0 24px rgba(0,0,0,.25); visibility: hidden; }
+  .drawer.open { transform: none; visibility: visible; }
+  .drawer-head { background: var(--red); color: var(--white); padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .drawer-head b { font-size: 1.2rem; }
+  .drawer-close { background: none; border: 0; color: var(--white); font-size: 1.8rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+  .drawer-body { overflow-y: auto; flex: 1; padding: 10px 0; }
+  .drawer h5 { margin: 16px 18px 6px; color: var(--muted); font-size: .8rem; font-weight: 700; letter-spacing: .04em; }
+  .drawer nav a, .drawer nav button { display: block; width: 100%; text-align: left; padding: 12px 18px; background: none; border: 0; border-left: 4px solid transparent; font: inherit; font-weight: 600; color: var(--ink); text-decoration: none; cursor: pointer; }
+  .drawer nav a:hover, .drawer nav button:hover { background: var(--tint); border-left-color: var(--red); color: var(--red); }
+  .drawer nav button.on { border-left-color: var(--red); color: var(--red); background: var(--tint); }
+  .drawer-foot { padding: 14px 18px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+  .drawer-foot .btn { display: block; }
+  body.lock { overflow: hidden; }
+
+  @media (max-width: 640px) {
+    header.site .wrap { flex-wrap: wrap; gap: 10px; }
+    .search { order: 3; flex-basis: 100%; max-width: none; margin-left: 0; }
+    .head-btn { margin-left: auto; }
+    .hero .wrap { padding: 36px 20px 36px 22px; }
+    #grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .info { padding: 10px; }
+    .desc { display: none; }
+    .actions { grid-template-columns: 1fr; }
+    .fact { border-left: 0 !important; border-right: 0; border-bottom: 1px solid var(--line); }
+    .float { left: 12px; right: 12px; }
+    .float a { flex: 1; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span id="hours">Mon–Sat, 9 AM – 7 PM</span>
+  <a id="topCall" href="#">Call us</a>
+</div></div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
+  <div class="drawer-head">
+    <b id="drawerName">Red Mart</b>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <nav>
+      <a href="#top" data-close>Home</a>
+      <a href="#products" data-close>All products</a>
+      <a href="#contact" data-close>Contact</a>
+    </nav>
+    <h5>CATEGORIES</h5>
+    <nav id="drawerCats"></nav>
+  </div>
+  <div class="drawer-foot">
+    <a class="btn call" id="drawerCall" href="#">Call now</a>
+    <a class="btn wa" id="drawerWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</aside>
+
+<header class="site"><div class="wrap">
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
+  <a class="logo" href="#top" id="logo">Red Mart</a>
+  <div class="search"><input id="search" type="search" placeholder="Search products" aria-label="Search products"></div>
+  <a class="head-btn" id="headCall" href="#">Call now</a>
+</div></header>
+
+<section class="hero" id="top"><div class="wrap">
+  <h1>LED lights for trucks, tractors and commercial vehicles</h1>
+  <p>Tail lamps, indicators, roof lights, halogen and football lights by ARA Lite and SAB Lite. Call or message us for prices and bulk orders.</p>
+  <div class="btn-row">
+    <a class="solid" href="#products">View products</a>
+    <a class="outline" id="heroWa" href="#" target="_blank" rel="noopener">WhatsApp us</a>
+  </div>
+</div></section>
+
+<section class="facts"><div class="wrap">
+  <div class="fact"><b>Quick response</b><span>We reply within minutes</span></div>
+  <div class="fact"><b>ARA Lite &amp; SAB Lite</b><span>Two trusted LED brands</span></div>
+  <div class="fact"><b>12V &amp; 24V</b><span>Fits cars, trucks and buses</span></div>
+  <div class="fact"><b>Made in India</b><span>Wholesale and bulk orders</span></div>
+</div></section>
+
+<main class="wrap" id="products">
+  <div class="section-head">
+    <h2>Products</h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="grid"><p class="msg">Loading products…</p></div>
+
+  <div class="enquiry">
+    <div>
+      <h3>Need something specific?</h3>
+      <p>Tell us the vehicle and part you are looking for and we will help.</p>
+    </div>
+    <div class="btn-row">
+      <a class="solid" id="enqCall" href="#">Call now</a>
+      <a class="outline" id="enqWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+</main>
+
+<footer id="contact"><div class="wrap">
+  <div>
+    <h4 id="footName">Red Mart</h4>
+    <p id="footTag"></p>
+    <p>LED auto lights and accessories</p>
+  </div>
+  <div>
+    <h4>Contact</h4>
+    <p id="footPhone"></p>
+    <p id="footAddr"></p>
+    <p id="footEmail"></p>
+  </div>
+</div></footer>
+
+<div class="float">
+  <a class="f-wa" id="floatWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="f-call" id="floatCall" href="#">Call</a>
+</div>
+
+<script>
+/* ====== EDIT THESE ====== */
+const SHEET_CSV_URL = "";               // paste your published Google Sheet link here. Leave empty to use the built-in catalogue.
+const PHONE = "911140162909";           // call number: country code + number, no +, spaces or dashes
+const WHATSAPP = "";                    // WhatsApp mobile number (same format). Leave empty to use the call number.
+const SHOP_NAME = "Sunny Industries";
+const TAGLINE = "ARA Lite & SAB Lite";
+const ADDRESS = "517, Gali Rajan Kalan, Punja Sharif, Kashmiri Gate, Delhi-6";
+const EMAIL = "sunnyindustries4u@gmail.com";
+const HOURS = "Customer care: 011 40162909";
+/* ======================== */
+
+/* Built-in catalogue (used only when SHEET_CSV_URL is empty) */
+const DEMO = [
+{
+"name": "ATL-30B Super Ace HT LED",
+"category": "Tail Lights",
+"description": "LED tail lamp for Super Ace HT",
+"image": "images/atl-30b.jpg"
+},
+{
+"name": "Matadoor N/M / Minidor N/M / Max Pickup / Champion O/M",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/matadoor.jpg"
+},
+{
+"name": "Gama Tail Lamp",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/gama.jpg"
+},
+{
+"name": "Ape 4 Chamber AAA",
+"category": "Tail Lights",
+"description": "Tail lamp for Ape, 4 chamber",
+"image": "images/ape-aaa.jpg"
+},
+{
+"name": "SAB-14A Ape 4 Chamber LED",
+"category": "Tail Lights",
+"description": "LED tail lamp for Ape",
+"image": "images/sab-14a.jpg"
+},
+{
+"name": "ATL-14A Ape 4 Chamber LED",
+"category": "Tail Lights",
+"description": "LED tail lamp for Ape",
+"image": "images/atl-14a.jpg"
+},
+{
+"name": "Gadar Tail Lamp",
+"category": "Tail Lights",
+"description": "LED tail lamp. 12V / 24V",
+"image": "images/gadar.jpg"
+},
+{
+"name": "ATL-10 Dost LED",
+"category": "Tail Lights",
+"description": "LED tail lamp for Dost",
+"image": "images/atl-10.jpg"
+},
+{
+"name": "SAB 153 Jeeto LED",
+"category": "Tail Lights",
+"description": "LED tail lamp for Jeeto",
+"image": "images/sab-153.jpg"
+},
+{
+"name": "ATL-60 Jeeto DRL",
+"category": "Tail Lights",
+"description": "DRL tail lamp for Jeeto",
+"image": "images/atl-60.jpg"
+},
+{
+"name": "ATL-61 Ace HT DRL",
+"category": "Tail Lights",
+"description": "DRL tail lamp for Ace HT",
+"image": "images/atl-61.jpg"
+},
+{
+"name": "ATL-61A Ace HT DRL Running",
+"category": "Tail Lights",
+"description": "Running DRL tail lamp for Ace HT",
+"image": "images/atl-61a.jpg"
+},
+{
+"name": "Sikander LED Tail Lamp",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/sikander.jpg"
+},
+{
+"name": "ATL-11B Gypsy LED",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-11b.jpg"
+},
+{
+"name": "ATL-09B Canter LED",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-09b.jpg"
+},
+{
+"name": "ATL-03B L/L 2000 LED",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-03b.jpg"
+},
+{
+"name": "ATL-34A 12V / ATL-34B 24V 4 Chamber LED",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-34.jpg"
+},
+{
+"name": "ATL-37 12V / ATL-38 24V Bharat Benz",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-37.jpg"
+},
+{
+"name": "ATL-40 12V / ATL-41 24V Star",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-40.jpg"
+},
+{
+"name": "ATL-54A 12V / ATL-54B 24V BS-6 Canter",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-54.jpg"
+},
+{
+"name": "ATL-56A 12V / ATL-56B 24V Boss",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-56.jpg"
+},
+{
+"name": "ATL-55A 12V / ATL-55B 24V BS-6",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-55a.jpg"
+},
+{
+"name": "ATL-55C 12V / ATL-55D 24V BS-6 OE Coupler",
+"category": "Tail Lights",
+"description": "LED tail lamp",
+"image": "images/atl-55c.jpg"
+},
+{
+"name": "ATL-44B 12V / ATL-44 24V Butterfly Tail Lamp",
+"category": "Tail Lights",
+"description": "Tail lamp assembly. Red, yellow and white",
+"image": "images/atl-44b.jpg"
+},
+{
+"name": "ATL-44C 12V / ATL-44D 24V Butterfly Fancy",
+"category": "Tail Lights",
+"description": "Tail lamp assembly. Red, yellow and white",
+"image": "images/atl-44c.jpg"
+},
+{
+"name": "ATL-62 12V / ATL-62A 24V Butterfly 222",
+"category": "Tail Lights",
+"description": "Tail lamp assembly. Red, yellow and white",
+"image": "images/atl-62.jpg"
+},
+{
+"name": "Tail Lamp Assembly 111 No.",
+"category": "Tail Lights",
+"description": "12V / 24V. Red, yellow and white",
+"image": "images/lamp-111.jpg"
+},
+{
+"name": "004 Trump Tail Lamp",
+"category": "Tail Lights",
+"description": "12V / 24V. Red, yellow and white",
+"image": "images/trump-004.jpg"
+},
+{
+"name": "ATL-45 Tail / Roof Lamp 004 Flower",
+"category": "Tail Lights",
+"description": "12V / 24V. Red, yellow and white",
+"image": "images/atl-45-flower.jpg"
+},
+{
+"name": "ATL-45 Tail / Roof Lamp 004",
+"category": "Tail Lights",
+"description": "12V / 24V. Red, yellow and white",
+"image": "images/atl-45.jpg"
+},
+{
+"name": "Mini 8700 Tringa",
+"category": "Tail Lights",
+"description": "Red, yellow and white",
+"image": "images/mini-8700.jpg"
+},
+{
+"name": "Tail / Roof Lamp 8700 2023 Small",
+"category": "Tail Lights",
+"description": "12V / 24V. Red, yellow and white",
+"image": "images/8700-2023.jpg"
+},
+{
+"name": "Tail / Roof Lamp 8700 Small Chain",
+"category": "Tail Lights",
+"description": "Red, yellow and white",
+"image": "images/8700-chain.jpg"
+},
+{
+"name": "ATL-36 Tail Lamp Assembly Zig Zag",
+"category": "Tractor Lights",
+"description": "Tractor tail lamp",
+"image": "images/atl-36.jpg"
+},
+{
+"name": "ASL-47 Side Lamp Assembly Zig Zag",
+"category": "Tractor Lights",
+"description": "Tractor side lamp",
+"image": "images/asl-47.jpg"
+},
+{
+"name": "ASL-01B Side Lamp Massey 40 LED",
+"category": "Tractor Lights",
+"description": "Side lamp assembly",
+"image": "images/asl-01b.jpg"
+},
+{
+"name": "ASL-05B Side Lamp Arjun LED",
+"category": "Tractor Lights",
+"description": "Side lamp assembly",
+"image": "images/asl-05b.jpg"
+},
+{
+"name": "ASL-44B Side Lamp Eicher Latest LED",
+"category": "Tractor Lights",
+"description": "Side lamp assembly",
+"image": "images/asl-44b.jpg"
+},
+{
+"name": "SAB 320A Side Light 28-A LED Single Colour Mini",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-320a.jpg"
+},
+{
+"name": "SAB 320B Side Light 28-A LED Double Colour Mini",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-320b.jpg"
+},
+{
+"name": "SAB 579 12V / SAB 580 24V 28A Mini DRL Yellow",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-579.jpg"
+},
+{
+"name": "SAB 320D Side Light 28-B LED Double Colour",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-320d.jpg"
+},
+{
+"name": "ASL-54 28-B 2024 LED Double Colour",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/asl-54.jpg"
+},
+{
+"name": "SAB 567 12V / SAB 568 24V 28A Big DRL Yellow",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-567.jpg"
+},
+{
+"name": "SAB 583 12V / SAB 584 24V 28B Big DRL Tringa",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-583.jpg"
+},
+{
+"name": "SAB 581 12V / SAB 582 24V 28A Mini DRL Tringa",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-581.jpg"
+},
+{
+"name": "SAB 588A 12V / SAB 588B 24V Fish Tiranga DRL",
+"category": "Side Lights",
+"description": "Side lamp",
+"image": "images/sab-588.jpg"
+},
+{
+"name": "SAB 540 12V / SAB 541 24V Marcopolo LED",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/sab-540.jpg"
+},
+{
+"name": "AIL 37A Starbus LED",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-37a.jpg"
+},
+{
+"name": "AIL-38 Fender Light 407 LED",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-38.jpg"
+},
+{
+"name": "AIL-07A Side Light Turbo Latest LED",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-07a.jpg"
+},
+{
+"name": "AIL-06A Indicator Light L/L",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-06a.jpg"
+},
+{
+"name": "Indicator Light Canter 2020 Acrylic",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/canter-acr.jpg"
+},
+{
+"name": "SAB 376A Starbus",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/sab-376a.jpg"
+},
+{
+"name": "ASL-60 Bharat Benz T-3 Acrylic",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/asl-60.jpg"
+},
+{
+"name": "Indicator 100 No.",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ind-100.jpg"
+},
+{
+"name": "SAB 376A Starbus LED",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/sab-376a-led.jpg"
+},
+{
+"name": "Starbus Fancy White LED (DRL)",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/starbus-w.jpg"
+},
+{
+"name": "Starbus Fancy Yellow LED (DRL)",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/starbus-y.jpg"
+},
+{
+"name": "AIL-39 BS-6 Leyland Acrylic",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-39.jpg"
+},
+{
+"name": "AIL-39A BS-6 For Bus Acrylic",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/ail-39a.jpg"
+},
+{
+"name": "ATOL-4 Top Light Canter 2020 Acrylic",
+"category": "Indicator Lights",
+"description": "Indicator light",
+"image": "images/atol-4.jpg"
+},
+{
+"name": "Side Light MPL DRL Yellow",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/mpl-y.jpg"
+},
+{
+"name": "Side Light MPL DRL White",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/mpl-w.jpg"
+},
+{
+"name": "Mini Door DRL White",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/mini-door.jpg"
+},
+{
+"name": "Indicator Light Peugeot",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/peugeot.jpg"
+},
+{
+"name": "Side Light Assembly Chhatri",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/chhatri.jpg"
+},
+{
+"name": "Side Light Assembly Smoke",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/smoke.jpg"
+},
+{
+"name": "Stop Light Red Mini Volvo",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/volvo-red.jpg"
+},
+{
+"name": "Stop Light Yellow Mini Volvo",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/volvo-y.jpg"
+},
+{
+"name": "Indicator Light V Blue / Yellow",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/v-blue.jpg"
+},
+{
+"name": "IND 205 Rainbow DRL",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-205-r.jpg"
+},
+{
+"name": "Indicator 205 Yellow / Blue",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-205-y.jpg"
+},
+{
+"name": "Indicator 205 Tiranga / Blue",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-205-t.jpg"
+},
+{
+"name": "Indicator Light Tool",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/tool.jpg"
+},
+{
+"name": "Indicator Light Tool Running",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/tool-run.jpg"
+},
+{
+"name": "Indicator Muchh",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/muchh.jpg"
+},
+{
+"name": "Scania Puma",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-puma.jpg"
+},
+{
+"name": "Scania Rainbow",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-rainbow.jpg"
+},
+{
+"name": "Indicator 69",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-69.jpg"
+},
+{
+"name": "Scania Star",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-star.jpg"
+},
+{
+"name": "Scania Z",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-z.jpg"
+},
+{
+"name": "Scania Blue / Yellow",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-by.jpg"
+},
+{
+"name": "Scania T-2 Blue / Yellow",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/sc-t2.jpg"
+},
+{
+"name": "Indicator Oval 24 SMD Yellow / Blue",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/oval-24.jpg"
+},
+{
+"name": "Indicator 151 Yellow / Blue",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-151.jpg"
+},
+{
+"name": "Indicator 3 Eye",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-3eye.jpg"
+},
+{
+"name": "Indicator 151",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-151b.jpg"
+},
+{
+"name": "Indicator 152 Multi",
+"category": "Indicator Lights",
+"description": "12V / 24V",
+"image": "images/ind-152.jpg"
+},
+{
+"name": "Oval Indicator 111 No. Counting",
+"category": "Indicator Lights",
+"description": "Red, green, yellow and tiranga",
+"image": "images/oval-count.jpg"
+},
+{
+"name": "Oval Indicator 111 No.",
+"category": "Indicator Lights",
+"description": "Red, yellow, blue, green and tringa",
+"image": "images/oval-111.jpg"
+},
+{
+"name": "Oval Indicator AIL-10 12V / AIL-11 24V",
+"category": "Indicator Lights",
+"description": "Red, green, yellow, blue and white",
+"image": "images/oval-ail10.jpg"
+},
+{
+"name": "SAB-587A 12V / SAB-587B 24V Puk-Puk Fish Tiranga",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/pp-fish.jpg"
+},
+{
+"name": "S-585 Puk-Puk Type-2 Tiranga",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/s-585.jpg"
+},
+{
+"name": "AIL-31A 12V / AIL-31B 24V Puk-Puk Chrome Pink and Yellow",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-31a.jpg"
+},
+{
+"name": "AIL-18A 12V / AIL-18B 24V Puk-Puk Red",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-18a.jpg"
+},
+{
+"name": "AIL-19A 12V / AIL-19B 24V Puk-Puk Green",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-19a.jpg"
+},
+{
+"name": "AIL-20A 12V / AIL-20B 24V Puk-Puk Yellow",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-20a.jpg"
+},
+{
+"name": "AIL-21A 12V / AIL-21B 24V Puk-Puk White",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-21a.jpg"
+},
+{
+"name": "AIL-22A 12V / AIL-22B 24V Puk-Puk Blue",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-22a.jpg"
+},
+{
+"name": "AIL-23A 12V / AIL-23B 24V Puk-Puk Pink",
+"category": "Indicator Lights",
+"description": "Puk-puk indicator light",
+"image": "images/ail-23a.jpg"
+},
+{
+"name": "Star Light",
+"category": "Indicator Lights",
+"description": "Star light with bracket and mini version",
+"image": "images/star-light.jpg"
+},
+{
+"name": "Star Disco Light",
+"category": "Indicator Lights",
+"description": "Disco light",
+"image": "images/star-disco.jpg"
+},
+{
+"name": "Son Disco Light",
+"category": "Indicator Lights",
+"description": "Disco light",
+"image": "images/son-disco.jpg"
+},
+{
+"name": "Dil Disco Light",
+"category": "Indicator Lights",
+"description": "Disco light",
+"image": "images/dil-disco.jpg"
+},
+{
+"name": "Mooch Light 17 Inches Yellow",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-y.jpg"
+},
+{
+"name": "Mooch Light 17 Inches Red",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-r.jpg"
+},
+{
+"name": "Mooch Light 17 Inches Green",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-g.jpg"
+},
+{
+"name": "Mooch Light 17 Inches Tiranga",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-t.jpg"
+},
+{
+"name": "Mooch Radium With Light 26 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-26.jpg"
+},
+{
+"name": "Mooch Radium With Light 16 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-16.jpg"
+},
+{
+"name": "Plain Mooch Medium",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-pm.jpg"
+},
+{
+"name": "Plain Mooch Big",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "Mooch light",
+"image": "images/mooch-pb.jpg"
+},
+{
+"name": "Eagle Light 24 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/eagle-24.jpg"
+},
+{
+"name": "Eagle Light 16 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/eagle-16.jpg"
+},
+{
+"name": "Bull Light 24 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/bull-24.jpg"
+},
+{
+"name": "Bull Light 16 Inches",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/bull-16.jpg"
+},
+{
+"name": "PL-1",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-1.jpg"
+},
+{
+"name": "PL-2",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-2.jpg"
+},
+{
+"name": "PL-4",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-4.jpg"
+},
+{
+"name": "PL-3",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-3.jpg"
+},
+{
+"name": "PL-5",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-5.jpg"
+},
+{
+"name": "PL-7",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-7.jpg"
+},
+{
+"name": "PL-8",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-8.jpg"
+},
+{
+"name": "PL-10",
+"category": "Mooch, Eagle, Bull & PL Lights",
+"description": "LED light",
+"image": "images/pl-10.jpg"
+},
+{
+"name": "ARL-01 12V / ARL-02 24V Roof Lamp 8700 No. Red Small",
+"category": "Roof Lights",
+"description": "Also in yellow and white",
+"image": "images/arl-01.jpg"
+},
+{
+"name": "ARL-07 12V / ARL-08 24V Roof Lamp 8700 No. Red Big",
+"category": "Roof Lights",
+"description": "Also in yellow and white",
+"image": "images/arl-07.jpg"
+},
+{
+"name": "ARL-13A 12V / ARL-13B 24V Roof Lamp Red 4x4",
+"category": "Roof Lights",
+"description": "Also in yellow, white, green and blue",
+"image": "images/arl-13a.jpg"
+},
+{
+"name": "ARL-19A 12V / ARL-19B 24V Roof Lamp Red 5x5",
+"category": "Roof Lights",
+"description": "Also in yellow and white",
+"image": "images/arl-19a.jpg"
+},
+{
+"name": "Roof Lamp Marshal LED 12V",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/marshal.jpg"
+},
+{
+"name": "SAB 523 12V / SAB 524 24V Roof Lamp 4x4",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-523.jpg"
+},
+{
+"name": "ARL-22A 12V / ARL-22B 24V Roof Lamp 4x4 2022 Oval",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-22a.jpg"
+},
+{
+"name": "SAB 525 12V / SAB 526 24V Roof Lamp 4x8",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-525.jpg"
+},
+{
+"name": "ARL-23A 12V / ARL-23B 24V Roof Lamp 4x8 2022",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-23a.jpg"
+},
+{
+"name": "S-520A 12V / S-520B 24V Roof Light 1400 Star Blue",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/s-520a.jpg"
+},
+{
+"name": "S-520C 12V / S-520D 24V Roof Light 1400 Star Green",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/s-520c.jpg"
+},
+{
+"name": "SAB 530 12V / SAB 531 24V Roof Lamp 2020 Round",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-530.jpg"
+},
+{
+"name": "SAB 555 12V / SAB 556 24V Roof Lamp 2020 Square",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-555.jpg"
+},
+{
+"name": "Roof Lamp Moon Mini",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/moon-mini.jpg"
+},
+{
+"name": "Roof Lamp Rainbow Small 4.75 x 4.75 Inches",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/rainbow-s.jpg"
+},
+{
+"name": "Roof Lamp Rainbow Big 6.75 x 6.75 Inches",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/rainbow-b.jpg"
+},
+{
+"name": "SAB 511 12V / SAB 511A 24V Roof Lamp 107",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-511.jpg"
+},
+{
+"name": "SAB 512 12V / SAB 512A 24V Roof Lamp NH 10 No.",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-512.jpg"
+},
+{
+"name": "SAB 519 12V / SAB 520 24V Roof Lamp 1400 Night LED",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-519.jpg"
+},
+{
+"name": "SAB 521 12V / SAB 522 24V Roof Lamp 1000 LED",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-521.jpg"
+},
+{
+"name": "Roof Lamp 1400 No. DRL T-2",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-1400.jpg"
+},
+{
+"name": "SAB 513 12V / SAB 513A 24V Roof Lamp 2x5",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-513.jpg"
+},
+{
+"name": "SAB 503 12V / SAB 503A 24V Roof Lamp 108 With Switch",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-503.jpg"
+},
+{
+"name": "Roof Lamp 10 No.",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/roof-10.jpg"
+},
+{
+"name": "SAB 516 12V / SAB 517 24V Roof Lamp 5200",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-516.jpg"
+},
+{
+"name": "SAB 509 12V / SAB 509A 24V Roof Lamp 4x16 Blue",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/sab-509.jpg"
+},
+{
+"name": "ARL-24A 12V / ARL-24B 24V Roof Lamp 4x16 White",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-24a.jpg"
+},
+{
+"name": "Roof Lamp 4x16 Slick",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/slick.jpg"
+},
+{
+"name": "Roof Lamp 4x1 DRL Multi",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/drl-multi.jpg"
+},
+{
+"name": "ARL-26A 12V / ARL-26B 24V Roof Light Sonu Red",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-26a.jpg"
+},
+{
+"name": "ARL-27A 12V / ARL-27B 24V Roof Light Sonu Green",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-27a.jpg"
+},
+{
+"name": "ARL-28A 12V / ARL-28B 24V Roof Light Sonu White",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-28a.jpg"
+},
+{
+"name": "ARL-29A 12V / ARL-29B 24V Roof Light Janu Red",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-29a.jpg"
+},
+{
+"name": "ARL-30A 12V / ARL-30B 24V Roof Light Janu Green",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-30a.jpg"
+},
+{
+"name": "ARL-31A 12V / ARL-31B 24V Roof Light Janu White",
+"category": "Roof Lights",
+"description": "LED roof lamp",
+"image": "images/arl-31a.jpg"
+},
+{
+"name": "AHL-58 Bolero Super Glow 4 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/ahl-58.jpg"
+},
+{
+"name": "AHL-57 Bolero Super Glow 8 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/ahl-57.jpg"
+},
+{
+"name": "AHL-34A T-2 Full LED White",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/ahl-34a.jpg"
+},
+{
+"name": "AHL-34B T-2 Full LED Yellow",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/ahl-34b.jpg"
+},
+{
+"name": "AHL-56 Swift Super Glow 4 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/ahl-56.jpg"
+},
+{
+"name": "Swift Super Glow Yellow DRL 4 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/swift-y4.jpg"
+},
+{
+"name": "Swift Super Glow Blue DRL 4 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/swift-b4.jpg"
+},
+{
+"name": "Swift Super Glow Yellow DRL 8 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/swift-y8.jpg"
+},
+{
+"name": "Swift Super Glow Blue DRL 8 LED",
+"category": "Fog Lights",
+"description": "Fog light",
+"image": "images/swift-b8.jpg"
+},
+{
+"name": "AHL-03E 12V / AHL-03F 24V Head Light 1312 LED Tringa",
+"category": "Head & Halogen Lights",
+"description": "Head light",
+"image": "images/ahl-03e.jpg"
+},
+{
+"name": "Bumper Light 1109 (Bubble) LED With DRL",
+"category": "Head & Halogen Lights",
+"description": "LED head light",
+"image": "images/bumper-1109.jpg"
+},
+{
+"name": "Head Light JCB New LED",
+"category": "Head & Halogen Lights",
+"description": "LED head light",
+"image": "images/jcb-led.jpg"
+},
+{
+"name": "4x6 Super 12V / 24V",
+"category": "Head & Halogen Lights",
+"description": "LED head light",
+"image": "images/4x6-super.jpg"
+},
+{
+"name": "4x6 LED 12V / 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/4x6-led.jpg"
+},
+{
+"name": "Halogen Yuvraj 8 LED",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/yuvraj-8.jpg"
+},
+{
+"name": "Halogen Light Round 18 LED Crystal",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/round-18.jpg"
+},
+{
+"name": "Halogen Light Square 18 LED Crystal",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/square-18.jpg"
+},
+{
+"name": "21 LED Combo 12V / 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/combo-21.jpg"
+},
+{
+"name": "L-26 12V / 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/l-26.jpg"
+},
+{
+"name": "Halogen Light Round 22 LED",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/round-22.jpg"
+},
+{
+"name": "Halogen Light Square 25 LED",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/square-25.jpg"
+},
+{
+"name": "Halogen Light Round 150 No.",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/round-150.jpg"
+},
+{
+"name": "Mini Baar Light",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/mini-baar.jpg"
+},
+{
+"name": "Yovraj DRL",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/yovraj-drl.jpg"
+},
+{
+"name": "Halogen Thar 12V / 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/thar.jpg"
+},
+{
+"name": "Fog Light Honey Blue DRL",
+"category": "Head & Halogen Lights",
+"description": "LED fog light",
+"image": "images/honey-blue.jpg"
+},
+{
+"name": "Fog Light Honey",
+"category": "Head & Halogen Lights",
+"description": "LED fog light",
+"image": "images/honey.jpg"
+},
+{
+"name": "Halogen 80mm DRL",
+"category": "Head & Halogen Lights",
+"description": "LED fog light",
+"image": "images/80mm-drl.jpg"
+},
+{
+"name": "Halogen Sikander DRL",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light, 12V / 24V",
+"image": "images/sik-drl.jpg"
+},
+{
+"name": "Halogen Sikander",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light, 12V / 24V",
+"image": "images/sik.jpg"
+},
+{
+"name": "Halogen Smart 12 LED",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light, 12V / 24V",
+"image": "images/smart-12.jpg"
+},
+{
+"name": "Halogen Mini Boss 30 LED",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/mini-boss.jpg"
+},
+{
+"name": "Halogen Ranjha 9 LED AHAL-39A 12V / AHAL-39B 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/ranjha.jpg"
+},
+{
+"name": "Halogen Heer 16 LED AHAL-38A 12V / AHAL-38B 24V",
+"category": "Head & Halogen Lights",
+"description": "LED halogen light",
+"image": "images/heer.jpg"
+},
+{
+"name": "FBL-10A 12V / FBL-10B 24V Football Light 2020 Tyre 18 SMD (Red)",
+"category": "Football Lights",
+"description": "Football light",
+"image": "images/fbl-10.jpg"
+},
+{
+"name": "FBL-13A 12V / FBL-13B 24V Football Light 2020 Tyre Multi",
+"category": "Football Lights",
+"description": "Football light",
+"image": "images/fbl-13.jpg"
+},
+{
+"name": "FBL-16 Football Light 2021 Round Red",
+"category": "Football Lights",
+"description": "Football light",
+"image": "images/fbl-16.jpg"
+},
+{
+"name": "FBL-19 Football Light 2021 Round Multi",
+"category": "Football Lights",
+"description": "Football light",
+"image": "images/fbl-19.jpg"
+},
+{
+"name": "Eye Cat Roadway",
+"category": "Eye Cat & Top Lights",
+"description": "Eye cat",
+"image": "images/eyecat-road.jpg"
+},
+{
+"name": "Eye Cat Road Star 2 No.",
+"category": "Eye Cat & Top Lights",
+"description": "Eye cat",
+"image": "images/eyecat-star.jpg"
+},
+{
+"name": "Eye Cat 407 Multi LED",
+"category": "Eye Cat & Top Lights",
+"description": "Eye cat",
+"image": "images/eyecat-407.jpg"
+},
+{
+"name": "Eye Cat Flashing Dil",
+"category": "Eye Cat & Top Lights",
+"description": "LED light",
+"image": "images/eyecat-dil.jpg"
+},
+{
+"name": "SAB 717 Eye Cat Flashing Red / Blue",
+"category": "Eye Cat & Top Lights",
+"description": "LED light",
+"image": "images/sab-717.jpg"
+},
+{
+"name": "Revolving Light LED",
+"category": "Eye Cat & Top Lights",
+"description": "LED light",
+"image": "images/revolving.jpg"
+},
+{
+"name": "Top Light 1109 3 Eye 12V / 24V",
+"category": "Eye Cat & Top Lights",
+"description": "Top light",
+"image": "images/top-3eye.jpg"
+},
+{
+"name": "ATOL-2 12V / ATOL-3 24V Top Light 1109 DRL Round",
+"category": "Eye Cat & Top Lights",
+"description": "Top light",
+"image": "images/atol-2.jpg"
+},
+{
+"name": "ATOL-01 / SAB 1605 Top Light 1109",
+"category": "Eye Cat & Top Lights",
+"description": "Top light",
+"image": "images/atol-01.jpg"
+},
+{
+"name": "AC DC Converter Big With C Type USB",
+"category": "AC DC Converters",
+"description": "AC DC converter",
+"image": "images/acdc-big.jpg"
+},
+{
+"name": "AC DC Converter Digital Common",
+"category": "AC DC Converters",
+"description": "AC DC converter",
+"image": "images/acdc-digital.jpg"
+},
+{
+"name": "ACDC-07 AC DC Converter Micro Common",
+"category": "AC DC Converters",
+"description": "AC DC converter",
+"image": "images/acdc-07.jpg"
+},
+{
+"name": "Ferrari Charger C Type",
+"category": "AC DC Converters",
+"description": "USB charger",
+"image": "images/ferrari.jpg"
+},
+{
+"name": "Dibi USB",
+"category": "AC DC Converters",
+"description": "USB charger",
+"image": "images/dibi.jpg"
+},
+{
+"name": "Side Mirror Wind",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/mirror-wind.jpg"
+},
+{
+"name": "Side Mirror Rod Sigma",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/rod-sigma.jpg"
+},
+{
+"name": "Side Mirror Rod F Type Big",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/rod-f.jpg"
+},
+{
+"name": "Side Mirror Rod Eichro Pro 1114",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/rod-eichro.jpg"
+},
+{
+"name": "Side Mirror Rod E-Comet",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/rod-ecomet.jpg"
+},
+{
+"name": "Air Gun PVC",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/airgun-pvc.jpg"
+},
+{
+"name": "Air Gun Steel",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/airgun-steel.jpg"
+},
+{
+"name": "Container Belt",
+"category": "Mirrors & Accessories",
+"description": "Truck accessory",
+"image": "images/belt.jpg"
+},
+{
+"name": "Jai Shree Ram LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-ram.jpg"
+},
+{
+"name": "Jai Shree Shyam LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-shyam.jpg"
+},
+{
+"name": "Har Har Mahadev LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-mahadev.jpg"
+},
+{
+"name": "Om Namah Shivay LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-shivay.jpg"
+},
+{
+"name": "Jai Bajrang Bali LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-bajrang.jpg"
+},
+{
+"name": "Om Sai Ram LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-sai.jpg"
+},
+{
+"name": "Happy New Year LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-newyear.jpg"
+},
+{
+"name": "I Love My India LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-india.jpg"
+},
+{
+"name": "Shree Ram LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-shreeram.jpg"
+},
+{
+"name": "Boss LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-boss.jpg"
+},
+{
+"name": "786 LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-786.jpg"
+},
+{
+"name": "Stop LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-stop.jpg"
+},
+{
+"name": "Yellow Arrow LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-yarrow.jpg"
+},
+{
+"name": "Police Arrow LED Module Light",
+"category": "LED Module Lights",
+"description": "LED module display light",
+"image": "images/m-parrow.jpg"
+}
+];
+
+const $ = id => document.getElementById(id);
+const telLink = "tel:+" + PHONE;
+const waLink = txt => "https://wa.me/" + (WHATSAPP || PHONE) + "?text=" + encodeURIComponent(txt || "Hi, I'd like to know more about your products.");
+
+document.title = SHOP_NAME;
+$("logo").textContent = SHOP_NAME;
+$("footName").textContent = SHOP_NAME;
+$("drawerName").textContent = SHOP_NAME;
+$("hours").textContent = HOURS;
+$("footPhone").textContent = "Phone: +" + PHONE;
+$("footAddr").textContent = ADDRESS;
+$("footEmail").innerHTML = '<a href="mailto:' + EMAIL + '">' + EMAIL + "</a>";
+$("footTag").textContent = TAGLINE;
+["topCall", "headCall", "enqCall", "floatCall", "drawerCall"].forEach(id => $(id).href = telLink);
+["heroWa", "enqWa", "floatWa", "drawerWa"].forEach(id => $(id).href = waLink());
+
+let products = [], activeCat = "";
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+
+// Neutral placeholder for products with no photo
+function placeholder() {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#f7f3f2"/>
+    <g fill="none" stroke="#b3121b" stroke-width="5" stroke-linejoin="round" opacity=".55">
+      <path d="M200 90 L270 125 L270 200 L200 235 L130 200 L130 125 Z"/>
+      <path d="M130 125 L200 160 L270 125 M200 160 L200 235"/>
+    </g></svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+// Turns a Google Drive share link into a direct image link
+function fixImage(url) {
+  const m = url.match(/drive\.google\.com\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
+  if (url.includes("drive.google.com") && m) return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w800";
+  return url;
+}
+
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cell); cell = ""; if (row.some(v => v.trim())) rows.push(row); row = []; }
+    else cell += c;
+  }
+  row.push(cell); if (row.some(v => v.trim())) rows.push(row);
+  return rows;
+}
+function toObjects(rows) {
+  const head = rows[0].map(h => h.trim().toLowerCase());
+  return rows.slice(1).map(r => { const o = {}; head.forEach((h, i) => o[h] = (r[i] || "").trim()); return o; });
+}
+
+function drawChips() {
+  const cats = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
+  $("chips").innerHTML = ["All", ...cats].map(c =>
+    `<button class="chip ${((c === "All" && !activeCat) || c === activeCat) ? "on" : ""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    activeCat = b.dataset.c === "All" ? "" : b.dataset.c; drawChips(); render();
+  });
+  $("drawerCats").innerHTML = ["All", ...cats].map(c =>
+    `<button data-c="${esc(c)}" class="${((c === "All" && !activeCat) || c === activeCat) ? "on" : ""}">${esc(c)}</button>`).join("");
+  $("drawerCats").querySelectorAll("button").forEach(b => b.onclick = () => {
+    activeCat = b.dataset.c === "All" ? "" : b.dataset.c; drawChips(); render();
+    closeMenu(); $("products").scrollIntoView();
+  });
+}
+
+/* side menu */
+function openMenu() {
+  $("drawer").classList.add("open"); $("overlay").classList.add("open");
+  $("drawer").setAttribute("aria-hidden", "false"); $("menuBtn").setAttribute("aria-expanded", "true");
+  document.body.classList.add("lock"); $("drawerClose").focus();
+}
+function closeMenu() {
+  $("drawer").classList.remove("open"); $("overlay").classList.remove("open");
+  $("drawer").setAttribute("aria-hidden", "true"); $("menuBtn").setAttribute("aria-expanded", "false");
+  document.body.classList.remove("lock");
+}
+$("menuBtn").onclick = openMenu;
+$("drawerClose").onclick = closeMenu;
+$("overlay").onclick = closeMenu;
+document.querySelectorAll("[data-close]").forEach(a => a.addEventListener("click", closeMenu));
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeMenu(); $("menuBtn").focus(); } });
+
+function render() {
+  const q = $("search").value.toLowerCase();
+  const list = products.filter(p =>
+    (!activeCat || p.category === activeCat) &&
+    (!q || (p.name + " " + (p.description || "") + " " + (p.category || "")).toLowerCase().includes(q)));
+  $("count").textContent = list.length + (list.length === 1 ? " product" : " products");
+  if (!list.length) { $("grid").innerHTML = '<p class="msg">No products found. Try a different search.</p>'; return; }
+  $("grid").innerHTML = list.map(p => {
+    const img = p.image ? fixImage(p.image) : placeholder();
+    return `<article class="card">
+      ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ""}
+      <img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy">
+      <div class="info">
+        ${p.category ? `<div class="cat">${esc(p.category)}</div>` : ""}
+        <h3>${esc(p.name)}</h3>
+        ${p.description ? `<div class="desc">${esc(p.description)}</div>` : ""}
+        ${p.price ? `<div class="price">${esc(p.price)}</div>` : `<div class="cat" style="margin-top:6px">Price on request</div>`}
+        <div class="actions">
+          <a class="btn call" href="${telLink}">Call</a>
+          <a class="btn wa" href="${waLink("Hi, I'm interested in: " + p.name + (p.price ? " (" + p.price + ")" : ""))}" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div></article>`;
+  }).join("");
+  // if a photo fails to load, show the placeholder instead
+  $("grid").querySelectorAll("img").forEach(im => im.onerror = () => { im.onerror = null; im.src = placeholder(); });
+}
+
+async function load() {
+  try {
+    if (!SHEET_CSV_URL) { products = DEMO; }
+    else {
+      const res = await fetch(SHEET_CSV_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error(res.status);
+      products = toObjects(parseCSV(await res.text()))
+        .filter(p => p.name && (p.show || "").toLowerCase() !== "no");
+    }
+    drawChips(); render();
+  } catch (e) {
+    $("grid").innerHTML = '<p class="msg">Could not load products. Please try again later.</p>';
+  }
+}
+$("search").addEventListener("input", render);
+load();
+</script>
+</body>
+</html>
